@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color: white;
+  }
+}
+
+@layer utilities {
+  .bg-cinematic {
+    background: radial-gradient(
+      circle at 50% 50%, 
+      rgba(13, 25, 48, 1) 0%, 
+      rgba(5, 10, 20, 1) 100%
+    );
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Hide scrollbar for a cleaner cinematic look */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
