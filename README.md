@@ -1,16 +1,29 @@
-# React + Vite
+# Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An editorial portfolio built around a single idea: **time**. A 3D clock (React Three Fiber) sits beside the page and its hands advance as you scroll — 12:00 at the top, a full turn by the contact section. Sections are marked as hours on the dial: About (03:00), Work (06:00), Experience (09:00), Contact (12:00).
 
-Currently, two official plugins are available:
+## Run it
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+## Make it yours
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+All copy lives in [`src/content.js`](src/content.js): your name, intro, about text, projects, experience, toolkit and contact links. Anything labelled *Placeholder* is meant to be replaced.
 
-## Expanding the ESLint configuration
+- **Project images**: drop files in `public/work/` and set `image: '/work/your-file.jpg'` on a project. Without an image, a generated cover in the project's `color` is used.
+- **Project links**: set `link` to show a "Visit project" button in the case study.
+- **Clock time zone**: `site.timezone` (defaults to the visitor's own zone).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Structure
+
+```
+src/
+  content.js            all site copy
+  components3d/         Scene (canvas, lights) and Clock (the 3D object)
+  ui/                   Nav, Hero, About, Work, CaseStudy, Experience, Contact
+  hooks/                scroll → clock progress, live time
+  utils/audio.js        optional tick sound (off by default)
+```

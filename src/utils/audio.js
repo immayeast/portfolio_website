@@ -1,41 +1,33 @@
-// Proceed with standard Web Audio API for synthesized tick since we don't have an asset
-class TickerGenerator {
+// A soft synthesized clock tick (Web Audio, no asset needed). Off by default;
+// the visitor turns it on from the nav, which also unlocks the AudioContext.
+class Ticker {
   constructor() {
-    this.audioCtx = null;
+    this.ctx = null
   }
 
-  init() {
-    if (!this.audioCtx) {
-      this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  unlock() {
+    if (!this.ctx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext
+      if (Ctx) this.ctx = new Ctx()
     }
+    if (this.ctx?.state === 'suspended') this.ctx.resume()
   }
 
   play() {
-    if (!this.audioCtx) return;
-    
-    // Create a very short, high-pitched mechanical noise click
-    const osc = this.audioCtx.createOscillator();
-    const gainNode = this.audioCtx.createGain();
-
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(800, this.audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(100, this.audioCtx.currentTime + 0.05);
-
-    gainNode.gain.setValueAtTime(0.5, this.audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.05);
-
-    osc.connect(gainNode);
-    gainNode.connect(this.audioCtx.destination);
-
-    osc.start();
-    osc.stop(this.audioCtx.currentTime + 0.05);
+    const ctx = this.ctx
+    if (!ctx || ctx.state !== 'running') return
+    const t = ctx.currentTime
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = 'triangle'
+    osc.frequency.setValueAtTime(1800, t)
+    osc.frequency.exponentialRampToValueAtTime(400, t + 0.03)
+    gain.gain.setValueAtTime(0.12, t)
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.04)
+    osc.connect(gain).connect(ctx.destination)
+    osc.start(t)
+    osc.stop(t + 0.05)
   }
 }
 
-export const ticker = new TickerGenerator();
-
-// Initialize on user interact to comply with browser autoplay policies
-if (typeof window !== 'undefined') {
-  window.addEventListener('click', () => ticker.init(), { once: true });
-  window.addEventListener('touchstart', () => ticker.init(), { once: true });
-}
+export const ticker = new Ticker()

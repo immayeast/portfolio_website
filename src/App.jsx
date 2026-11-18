@@ -1,42 +1,32 @@
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { MotionConfig } from 'framer-motion'
 import { Scene } from './components3d/Scene'
-import { PortfolioUI } from './ui/PortfolioUI'
-import { OriginNote } from './ui/OriginNote'
-import { useStore } from './store/useStore'
+import { useScrollClock } from './hooks/useScrollClock'
+import { Nav } from './ui/Nav'
+import { Hero } from './ui/Hero'
+import { About } from './ui/About'
+import { Work } from './ui/Work'
+import { Experience } from './ui/Experience'
+import { Contact } from './ui/Contact'
+import { CaseStudy } from './ui/CaseStudy'
 
 function App() {
-  const isOriginVisible = useStore((state) => state.isOriginVisible)
+  useScrollClock()
 
   return (
-    <motion.div 
-      className="w-full relative selection:bg-teal-500/30"
-      animate={{
-        backgroundColor: isOriginVisible ? "#1a120b" : "#050a14"
-      }}
-      transition={{ duration: 1.2, ease: "easeInOut" }}
-      style={{
-        // Fallback for initial load
-        backgroundColor: "#050a14"
-      }}
-    >
-      <div className={`fixed inset-0 pointer-events-none transition-opacity duration-1000 ${isOriginVisible ? 'opacity-0' : 'opacity-100'}`}>
-        <div className="absolute inset-0 bg-cinematic" />
+    <MotionConfig reducedMotion="user">
+      <div className="grain relative min-h-screen">
+        <Scene />
+        <Nav />
+        <main className="relative z-10">
+          <Hero />
+          <About />
+          <Work />
+          <Experience />
+          <Contact />
+        </main>
+        <CaseStudy />
       </div>
-
-      {/* 3D Canvas Layer */}
-      <Scene />
-
-      {/* 2D HUD Layer */}
-      <PortfolioUI />
-      
-      {/* Surprise Origin Layer */}
-      <OriginNote />
-
-      {/* The Scroll Track - Invisible but forces the page to scroll */}
-      <div className="h-[400vh] w-full pointer-events-none" />
-      
-    </motion.div>
+    </MotionConfig>
   )
 }
 
